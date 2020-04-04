@@ -12,7 +12,7 @@ A=A.sample(frac=1)
 # Assign a preliminary ID to every entry in the 'Email' serie:
 for a in range(1,len(A['Email'])):
     if A['Email'][:a].isin([A['Email'][a]]).any():
-        pid[a]=np.where(A['Email'][:3].isin([A['Email'][3]]))[0][0]
+        pid[a]=np.where(A['Email'][:a].isin([A['Email'][a]]))[0][0]
     else:
         pid[a]=a
 
