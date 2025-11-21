@@ -1,0 +1,38 @@
+import pandas as pd
+import numpy as np
+
+# Crea il DataFrame di esempio
+A = pd.DataFrame({
+    'Email': [
+        'email0@email.com',
+        'amail1@email.net',
+        'email2@email.something',
+        'amail1@email.net'
+    ],
+    'OtherData': [0, 'af4', 96, 'foo']
+})
+
+# Inizializza l'array di ID
+pid = np.zeros(len(A), dtype=int)
+
+# Mappa per tracciare email già viste
+seen = {}
+
+# Assegna un ID basato sulla prima occorrenza
+for i, email in enumerate(A['Email']):
+    if email in seen:
+        pid[i] = seen[email]
+    else:
+        pid[i] = i
+        seen[email] = i
+
+# Anonimizza ogni email: somma dei codici ASCII
+A['Email_Anon'] = A['Email'].apply(lambda x: sum(map(ord, x)))
+
+# Combina l'hash con l'ID
+A['Email_Anon'] = A.apply(lambda row: int(f"{row['Email_Anon']}{row.name if row.name == pid[row.name] else pid[row.name]}"), axis=1)
+
+# Shuffle del DataFrame
+A = A.sample(frac=1).reset_index(drop=True)
+
+print(A)
